@@ -231,17 +231,43 @@ const modal = document.getElementById("studentModal");
 const modalCloseBtn = document.getElementById("modalCloseBtn");
 const studentList = document.getElementById("studentList");
 
+// Fonction pour ouvrir le modal en injectant la liste des étudiants
 function openModal(index) {
   const formation = formations[index];
-  studentList.innerHTML = formation.etudiants.map(student => `<li>${student}</li>`).join("");
-  modal.classList.remove("hidden");
+  if (formation && formation.etudiants) {
+    studentList.innerHTML = formation.etudiants
+      .map(student => `<li>${student}</li>`)
+      .join("");
+    modal.classList.remove("hidden");
+  } else {
+    console.error("Formation introuvable ou pas d'étudiants définis pour cet index.");
+  }
 }
 
-if (modalCloseBtn) {
-  modalCloseBtn.addEventListener("click", () => {
-    modal.classList.add("hidden");
-  });
+// Fonction de fermeture du modal
+function closeModal() {
+  modal.classList.add("hidden");
 }
+
+// Clôture via le bouton de fermeture
+if (modalCloseBtn) {
+  modalCloseBtn.addEventListener("click", closeModal);
+}
+
+// Fermer le modal en cliquant à l'extérieur de la zone de contenu
+modal.addEventListener("click", function(event) {
+  if (event.target === modal) {
+    closeModal();
+  }
+});
+
+// Fermer le modal via la touche Échap
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape" && !modal.classList.contains("hidden")) {
+    closeModal();
+  }
+});
+
 
 /* =========================
    Formulaire de Contact
